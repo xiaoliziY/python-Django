@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>电影爬虫</title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css" media="all">
+    <style>
+        body {
+            margin: 10px;
+        }
+
+        .demo-carousel {
+            height: 200px;
+            line-height: 200px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-nav layui-bg-blue" align="center" style="align: center;font-size: xx-large;">
+    <div class="layui-nav-item" style="align:center;font-size: large;">爬取电影数据结果展示</div>
+
+</div>
+<div class="layui-nav layui-bg-gray" align="center" style="height: 40px;vertical-align: center;padding: 5px" >
+    <input type="button"  align="left"  class="layui-icon-link" onclick="toIndex()" value="返回主页" style="width: 100px;height: 30px;float: left;"  >
+   <input type="text"  class="layui-input"  id="searchTitle"  style="width: 300px;height: 30px;top: 5px;margin-left:30%;float: left"> <input type="button"  class="layui-upload-button"  onclick="searchMovies()" value="查询" style="width: 50px;height: 30px;top: 5px;float: left">
+</div>
+<script>
+    function toIndex() {
+        window.location.href="/toIndex"
+    }
+</script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">电影</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">图片</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<table class="layui-hide" id="demo" lay-filter="test"></table>
+
+
+<script src="/static/layui/layui.js"></script>
+<script>
+
+
+    layui.config({
+        version: '1560414887155' //为了更新 js 缓存，可忽略
+    });
+
+    layui.use(['laypage', 'layer', 'table', 'element', 'slider'], function () {
+        var laypage = layui.laypage //分页
+            , layer = layui.layer //弹层
+            , table = layui.table //表格
+            , element = layui.element //元素操作
+            , slider = layui.slider //滑块
+
+        //向世界问个好
+        //layer.msg('Hello World');
+
+        //监听Tab切换
+        element.on('tab(demo)', function (data) {
+            layer.tips('切换了 ' + data.index + '：' + this.innerHTML, this, {
+                tips: 1
+            });
+        });
+
+        //执行一个 table 实例
+        table.render({
+            elem: '#demo'
+            , height: 480
+            , url: '/selMsg' //数据接口
+            , title: '用户表'
+            , page: true
+            , cols: [[ //表头
+                {field: 'id', title: 'ID', width: '20%', sort: true, fixed: 'left', align: "center"}
+                , {field: 'title', title: '电影名', align: "center", width: '20%'}
+                , {field: 'url', title: '电影链接', width: '20%', align: "center", totalRow: true}
+                , {field: 'cover', width: '20%', title: '图片链接', align: 'center'}
+                , {width: '20%', title: '操作类型', align: 'center', toolbar: '#barDemo'}
+            ]]
+        });
+
+
+        //监听行工具事件
+        table.on('tool(test)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var data = obj.data //获得当前行数据
+                , layEvent = obj.event; //获得 lay-event 对应的值
+            if (layEvent === 'detail') { //电影链接跳转
+                top.location.href = data['url']
+            } else if (layEvent === 'del') { //删除数据
+                table.render({
+                    elem: '#demo'
+                    , height: 480
+                    , url: '/delMovie?id=' + data["id"] //删除数据接口
+                    , title: '用户表'
+                    , page: true
+                    , cols: [[ //表头
+                        {field: 'id', title: 'ID', width: '20%', sort: true, fixed: 'left', align: "center"}
+                        , {field: 'title', title: '电影名', align: "center", width: '20%'}
+                        , {field: 'url', title: '电影链接', width: '20%', align: "center", totalRow: true}
+                        , {field: 'cover', width: '20%', title: '图片链接', align: 'center'}
+                        , {width: '20%', title: '操作类型', align: 'center', toolbar: '#barDemo'}
+                    ]]
+                });
+            } else if (layEvent === 'edit') {
+                top.location.href = data['cover']
+            }
+        });
+
+
+        //分页
+        laypage.render({
+            elem: 'pageDemo' //分页容器的id
+            , count: 100 //总页数
+            , skin: '#1E9FFF' //自定义选中色值
+            ,skip: true //开启跳页
+            , jump: function (obj, first) {
+                if (!first) {
+                    layer.msg('第' + obj.curr + '页', {offset: 'b'});
+                }
+            }
+        });
+
+
+        slider.render({
+            elem: '#sliderDemo'
+            , input: true //输入框
+        });
+
+        //底部信息
+        var footerTpl = lay('#footer')[0].innerHTML;
+        lay('#footer').html(layui.laytpl(footerTpl).render({}))
+            .removeClass('layui-hide');
+    });
+
+    function searchMovies() {
+        var newTitle = document.getElementById("searchTitle").value;
+        layui.table.render({
+            elem: '#demo'
+            , height: 480
+            , url: '/select?title=' + newTitle//数据接口
+            , title: '电影数据表'
+            , page: true
+            , cols: [[ //表头
+                {field: 'id', title: 'ID', width: '20%', sort: true, fixed: 'left', align: "center"}
+                , {field: 'title', title: '电影名', align: "center", width: '20%'}
+                , {field: 'url', title: '电影链接', width: '20%', align: "center", totalRow: true}
+                , {field: 'cover', width: '20%', title: '图片链接', align: "center"}
+                , {width: '20%', title: '操作类型', align: 'center', toolbar: '#barDemo'}
+            ]]
+        });
+        console.log(newTitle)
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>爬虫网站-第二组</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/materialize.min.css">
+    <link rel="stylesheet" href="/static/css/tooplate.css">
+</head>
+
+<body id="home">
+    <div class="container tm-home-mt tm-home-container">
+        <div class="row">
+            <div class="col-12">
+                <div class="tm-home-left">
+                    <h1 class="tm-site-title">HOME</h1>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                <div class="tm-home-left mt-3 font-weight-light">
+                    <p class="tm-mb-35">第二组荣耀出品.</p>
+                    <p class="tm-mb-35">Feel free to modify and use any form design. Please share it to your friends.</p>
+                    <p>{{ msg }}</p>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12" STYLE="top: 0px" >
+                <ul class="list-group tm-home-list tm-bg-black font-weight-light" style="background-color: darkslategray;">
+                    <li class="d-flex justify-content-between align-items-center">
+                        <a href="/spiderMovies" class="tm-white-text">豆瓣电影爬取</a>
+                    </li>
+                    <li class="d-flex justify-content-between align-items-center">
+                        <form action="/tieba" class="tm-white-text" method="get">
+                            <input type="text" name="tiebaName" width="100px" placeholder="爬取贴吧名字"><input type="text" name="page" placeholder="爬取贴吧页数">
+                            <input type="submit" id="warm" class="tm-bg-black" onblur="getcolor()"  style="background-color: darkslategray;border: 0px;cursor:pointer;text-align: left;" align="left" value="贴吧网页爬取">
+                        </form>
+
+                    </li>
+                    <li class="d-flex justify-content-between align-items-center">
+                        <a href="/showData" class="tm-white-text">豆瓣电影爬取结果展示</a>
+                    </li>
+                    <li class="d-flex justify-content-between align-items-center">
+                        <a href="/to_login" class="tm-white-text">注销登录</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <footer class="row tm-mt-big mb-3">
+        <div class="col-xl-12 text-center font-weight-light">
+            <p class="d-inline-block tm-bg-black white-text py-2 tm-px-5">
+                Copyright &copy; 2018 Company Name - Design:  Tooplate / More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">第二组</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a>
+            </p>
+        </div>
+    </footer>
+</body>
+
+<script>
+    /*
+    function tieba() {
+        var name=prompt("请输入要爬取贴吧的名字")
+         axios.get("/tieba/", {params:{tiebaName: name}});
+    }*/
+    var ele=document.getElementById("warm")
+    function  getcolor()
+    {
+        ele.color="#b3b2b2"
+
+    }
+
+</script>
+
+</html>
